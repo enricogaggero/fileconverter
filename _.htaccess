@@ -1,0 +1,14 @@
+RewriteEngine On
+Options -Indexes
+
+<FilesMatch "\.(ini|log)$">
+    Require all denied
+</FilesMatch>
+
+# Limiti upload - funziona solo con Apache + mod_php
+<IfModule mod_php.c>
+    php_value upload_max_filesize 4M
+    php_value post_max_size 5M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>

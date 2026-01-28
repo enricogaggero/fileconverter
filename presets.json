@@ -1,0 +1,56 @@
+{
+    "social": {
+        "label": "Social Media",
+        "presets": [
+            { "name": "Instagram Post", "width": 1080, "height": 1080 },
+            { "name": "Instagram Story", "width": 1080, "height": 1920 },
+            { "name": "Instagram Landscape", "width": 1080, "height": 566 },
+            { "name": "Facebook Post", "width": 1200, "height": 630 },
+            { "name": "Facebook Cover", "width": 820, "height": 312 },
+            { "name": "Facebook Story", "width": 1080, "height": 1920 },
+            { "name": "X/Twitter Post", "width": 1200, "height": 675 },
+            { "name": "X/Twitter Header", "width": 1500, "height": 500 },
+            { "name": "LinkedIn Post", "width": 1200, "height": 627 },
+            { "name": "LinkedIn Cover", "width": 1584, "height": 396 },
+            { "name": "YouTube Thumbnail", "width": 1280, "height": 720 },
+            { "name": "YouTube Banner", "width": 2560, "height": 1440 },
+            { "name": "TikTok Video", "width": 1080, "height": 1920 },
+            { "name": "Pinterest Pin", "width": 1000, "height": 1500 }
+        ]
+    },
+    "web": {
+        "label": "Web",
+        "presets": [
+            { "name": "Hero Banner", "width": 1920, "height": 1080 },
+            { "name": "Hero Banner 2x", "width": 3840, "height": 2160 },
+            { "name": "Blog Header", "width": 1200, "height": 600 },
+            { "name": "Thumbnail Small", "width": 300, "height": 200 },
+            { "name": "Thumbnail Medium", "width": 600, "height": 400 },
+            { "name": "Card Image", "width": 400, "height": 300 },
+            { "name": "OG Image", "width": 1200, "height": 630 },
+            { "name": "Favicon", "width": 512, "height": 512 }
+        ]
+    },
+    "display": {
+        "label": "Schermi",
+        "presets": [
+            { "name": "HD 720p", "width": 1280, "height": 720 },
+            { "name": "Full HD 1080p", "width": 1920, "height": 1080 },
+            { "name": "2K QHD", "width": 2560, "height": 1440 },
+            { "name": "4K UHD", "width": 3840, "height": 2160 },
+            { "name": "iPad", "width": 2048, "height": 2732 },
+            { "name": "iPhone 15", "width": 1179, "height": 2556 }
+        ]
+    },
+    "print": {
+        "label": "Stampa (300 DPI)",
+        "presets": [
+            { "name": "A4 Verticale", "width": 2480, "height": 3508 },
+            { "name": "A4 Orizzontale", "width": 3508, "height": 2480 },
+            { "name": "A3 Verticale", "width": 3508, "height": 4961 },
+            { "name": "10x15 cm", "width": 1181, "height": 1772 },
+            { "name": "13x18 cm", "width": 1535, "height": 2126 },
+            { "name": "20x30 cm", "width": 2362, "height": 3543 }
+        ]
+    }
+}

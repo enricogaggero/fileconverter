@@ -1,0 +1,20 @@
+# Uploaded and converted files
+uploads/
+converted/
+
+# Environment and server config
+.user.ini
+.htaccess
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
