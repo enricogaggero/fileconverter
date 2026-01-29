@@ -376,7 +376,7 @@
                     <select name="format" id="format" required>
                         <option value="">Seleziona formato...</option>
                         <option value="png">PNG (alta qualita, trasparenza)</option>
-                        <option value="jpg">JPG (alta compressione)</option>
+                        <option value="jpg" selected>JPG (alta compressione)</option>
                     </select>
                 </div>
 
@@ -519,6 +519,9 @@
             // Resize presets
             presetCategory.addEventListener('change', function() {
                 populateSizeDropdown(this.value, presetSize);
+                // Propaga la selezione al crop preset
+                cropPresetCategory.value = this.value;
+                populateSizeDropdown(this.value, cropPresetSize);
             });
             presetSize.addEventListener('change', function() {
                 const cat = presetCategory.value;
@@ -528,11 +531,38 @@
                 // Usa la larghezza del preset e calcola l'altezza proporzionale
                 resizeWidthInput.value = preset.width;
                 resizeHeightInput.value = Math.round(preset.width / aspectRatio);
+
+                // Propaga la dimensione selezionata al crop
+                cropPresetSize.value = this.value;
+                if (originalImage) {
+                    cropState.ratio = preset.width / preset.height;
+                    let cw, ch;
+                    if (workingWidth / workingHeight > cropState.ratio) {
+                        ch = Math.min(workingHeight, preset.height);
+                        cw = ch * cropState.ratio;
+                    } else {
+                        cw = Math.min(workingWidth, preset.width);
+                        ch = cw / cropState.ratio;
+                    }
+                    if (cw > workingWidth) { cw = workingWidth; ch = cw / cropState.ratio; }
+                    if (ch > workingHeight) { ch = workingHeight; cw = ch * cropState.ratio; }
+                    cropState.width = cw;
+                    cropState.height = ch;
+                    cropState.x = (workingWidth - cw) / 2;
+                    cropState.y = (workingHeight - ch) / 2;
+                    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                    updateCropBox();
+                    cropBox.classList.add('active');
+                    enableCropCheckbox.checked = true;
+                }
             });
 
             // Crop presets
             cropPresetCategory.addEventListener('change', function() {
                 populateSizeDropdown(this.value, cropPresetSize);
+                // Propaga la selezione al resize preset
+                presetCategory.value = this.value;
+                populateSizeDropdown(this.value, presetSize);
             });
             cropPresetSize.addEventListener('change', function() {
                 const cat = cropPresetCategory.value;
@@ -616,13 +646,38 @@
                 // Ridisegna canvas con dimensioni ridimensionate
                 drawCanvas();
 
-                // Reset crop
-                cropBox.classList.remove('active');
-                enableCropCheckbox.checked = false;
-                cropWidthInput.value = rw;
-                cropHeightInput.value = rh;
-                cropXInput.value = 0;
-                cropYInput.value = 0;
+                // Applica crop automatico se è selezionato un preset dimensione
+                const selectedCropSize = cropPresetSize.value;
+                const selectedCropCat = cropPresetCategory.value;
+                if (selectedCropCat && selectedCropSize !== '') {
+                    const preset = presetsData[selectedCropCat].presets[parseInt(selectedCropSize)];
+                    cropState.ratio = preset.width / preset.height;
+                    let cw, ch;
+                    if (workingWidth / workingHeight > cropState.ratio) {
+                        ch = Math.min(workingHeight, preset.height);
+                        cw = ch * cropState.ratio;
+                    } else {
+                        cw = Math.min(workingWidth, preset.width);
+                        ch = cw / cropState.ratio;
+                    }
+                    if (cw > workingWidth) { cw = workingWidth; ch = cw / cropState.ratio; }
+                    if (ch > workingHeight) { ch = workingHeight; cw = ch * cropState.ratio; }
+                    cropState.width = cw;
+                    cropState.height = ch;
+                    cropState.x = (workingWidth - cw) / 2;
+                    cropState.y = (workingHeight - ch) / 2;
+                    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                    updateCropBox();
+                    cropBox.classList.add('active');
+                    enableCropCheckbox.checked = true;
+                } else {
+                    cropBox.classList.remove('active');
+                    enableCropCheckbox.checked = false;
+                    cropWidthInput.value = rw;
+                    cropHeightInput.value = rh;
+                    cropXInput.value = 0;
+                    cropYInput.value = 0;
+                }
             });
 
             // ========== UNDO RESIZE ==========
