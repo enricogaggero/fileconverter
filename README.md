@@ -12,12 +12,15 @@ A web-based image converter and editor that supports WebP, AVIF, JPG, and PNG fo
 - **Drag & drop upload**: Drag files directly into the browser
 - **Error handling**: Bootstrap modal dialogs for user-friendly error messages
 - **AVIF fallback**: Automatic MIME type detection fallback for servers with outdated MIME databases
+- **Output formats**: the converted image is saved as JPG (with quality selector) or PNG; WebP and AVIF are accepted as input only
 
 ## Requirements
 
-- PHP 8.1+ (for AVIF support) or PHP 7.4+ (for WebP/JPG/PNG only)
-- GD library with AVIF and WebP support
+- PHP 8.1+ (for AVIF support) or PHP 7.4+ (for WebP/JPG/PNG only; the code does not check the PHP version, AVIF files are rejected at runtime if `imagecreatefromavif` is missing)
+- GD library with AVIF and WebP support, plus the `fileinfo` extension (checked at startup by `config.php`)
 - Apache or Nginx web server
+- PHP sessions enabled (the uploaded file and options are passed between `upload.php`, `convert.php` and `download.php` through the session)
+- Internet access from the visitor's browser: `index.php` loads Bootstrap 5.3.0 (jsDelivr) and Font Awesome 6.0.0 (cdnjs) from CDN
 
 ## Installation
 
@@ -31,19 +34,19 @@ fileconverter/
 ├── download.php
 ├── config.php
 ├── presets.json
-├── .htaccess
-├── .user.ini
+├── _.htaccess     (Apache/mod_php template, rename to .htaccess)
+├── .user.ini      (PHP-FPM limits)
 ├── uploads/       (created automatically)
 └── converted/     (created automatically)
 ```
 
-2. Set file permissions (Linux):
+2. Set file permissions (Linux). The `uploads/` and `converted/` folders are created automatically by `upload.php` if missing, so the web server user must be able to write in the project folder:
 
 ```bash
 chmod 755 uploads/ converted/
 ```
 
-3. For **PHP-FPM** servers, copy `.user.ini` to the project root. For **mod_php** servers, rename `_.htaccess` to `.htaccess`.
+3. For **PHP-FPM** servers, keep `.user.ini` in the project root. For **mod_php** servers, rename `_.htaccess` to `.htaccess`. Both `.user.ini` and `.htaccess` are listed in `.gitignore`, so only `_.htaccess` is versioned; recreate the local file on each server.
 
 4. Verify PHP extensions are enabled:
 
@@ -64,7 +67,7 @@ post_max_size = 5M
 
 ### Application settings
 
-Edit `config.php`:
+Edit `config.php` (it also defines `ALLOWED_TYPES`):
 
 ```php
 define('MAX_FILE_SIZE', 4 * 1024 * 1024); // 4MB
@@ -87,6 +90,8 @@ Edit `presets.json` to add, remove, or modify preset dimensions. Structure:
 }
 ```
 
+`config.php` currently sets `error_reporting(E_ALL)` and `display_errors=1`: disable them in production.
+
 Categories included by default: Social Media, Web, Display, Print (300 DPI).
 
 ## Workflow
@@ -94,7 +99,7 @@ Categories included by default: Social Media, Web, Display, Print (300 DPI).
 1. **Upload** an image (drag & drop or click to select)
 2. **Step 1 - Resize**: Choose a preset or enter custom dimensions. Click "Applica Resize" to confirm. Use "Annulla resize" to undo (supports multiple undo levels).
 3. **Step 2 - Crop**: Appears after resize. Select a preset, aspect ratio, or draw a custom crop area. Drag to reposition, use corner handles to resize.
-4. **Convert**: Select output format (JPG/PNG), quality level, and click "Converti Immagine".
+4. **Convert**: Select output format (JPG/PNG), quality level (JPG only), and click "Converti Immagine".
 5. **Download**: Preview the result and download the converted file.
 
 ## License

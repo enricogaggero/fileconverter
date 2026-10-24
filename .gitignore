@@ -18,3 +18,14 @@ Thumbs.db
 
 # Logs
 *.log
+
+# === Aggiunte audit: segreti e runtime ===
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+*.bak
+*.sqlite
+*.sqlite3
+*_accesso_produzione.md
+*credenziali*.md
